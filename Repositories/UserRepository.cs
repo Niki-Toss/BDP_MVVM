@@ -290,8 +290,8 @@ namespace BDP_MVVM.Repositories
         }
         // Проверить существование логина в базе
         // Используется для валидации уникальности логина при создании/редактировании
-        // <param name="login">Логин для проверки</param>
-        // <param name="excludeUserId">ID пользователя, который нужно исключить из проверки (при редактировании)</param>
+        // "login">Логин для проверки
+        // "excludeUserId">ID пользователя, который нужно исключить из проверки (при редактировании)
         public async Task<bool> LoginExistsAsync(string login, int excludeUserId = 0)
         {
             try

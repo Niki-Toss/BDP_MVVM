@@ -12,7 +12,7 @@ namespace BDP_MVVM
         // Заполнить базу данных тестовыми данными
         // Создаёт 50 тегов, 50 платформ, 50 контестов, 4 пользователей, 50 задач и все связи между ними
         // Проверяет, не заполнена ли БД уже, чтобы избежать дублирования данных
-        // <param name="connectionString">Строка подключения к базе данных SQLite</param>
+        // "connectionString">Строка подключения к базе данных SQLite
         public static void SeedDatabase(string connectionString)
         {
             try

@@ -76,7 +76,7 @@ namespace BDP_MVVM
         }
         // Создать структуру базы данных SQLite при первом запуске
         // Создаёт все таблицы, внешние ключи и добавляет начальные роли и администратора
-        // <param name="dbPath">Путь к файлу базы данных</param>
+        // "dbPath">Путь к файлу базы данных
         private void CreateDatabase(string dbPath)
         {
             SQLiteConnection.CreateFile(dbPath);
@@ -257,15 +257,15 @@ namespace BDP_MVVM
         #endregion
         #region Public Methods
         // Получить сервис по типу из контейнера DI
-        // <param name="serviceType">Тип запрашиваемого сервиса</param>
-        // <returns>Экземпляр сервиса или null</returns>
+        // "serviceType">Тип запрашиваемого сервиса
+        // Экземпляр сервиса или null
         public static object GetService(Type serviceType)
         {
             return _serviceProvider?.GetService(serviceType);
         }
         // Получить сервис с generic типом из контейнера DI
-        // <typeparam name="T">Тип запрашиваемого сервиса</typeparam>
-        // <returns>Экземпляр сервиса или null</returns>
+        // "T">Тип запрашиваемого сервиса
+        // Экземпляр сервиса или null
         public static T GetService<T>() where T : class
         {
             return _serviceProvider?.GetService(typeof(T)) as T;
@@ -277,8 +277,8 @@ namespace BDP_MVVM
     public interface IServiceProvider
     {
         // Получить зарегистрированный сервис по типу
-        // <param name="serviceType">Тип запрашиваемого сервиса</param>
-        // <returns>Экземпляр сервиса или null</returns>
+        // "serviceType">Тип запрашиваемого сервиса
+        // Экземпляр сервиса или null
         object GetService(Type serviceType);
     }
     // Коллекция для регистрации сервисов в DI контейнере
@@ -329,7 +329,7 @@ namespace BDP_MVVM
             _services[typeof(T)] = provider => factory(provider);
         }
         // Создать провайдер сервисов из зарегистрированных зависимостей
-        // <returns>Провайдер сервисов для разрешения зависимостей</returns>
+        // Провайдер сервисов для разрешения зависимостей
         public SimpleServiceProvider BuildServiceProvider()
         {
             return new SimpleServiceProvider(_services);
@@ -341,14 +341,14 @@ namespace BDP_MVVM
     {
         private readonly System.Collections.Generic.Dictionary<Type, Func<IServiceProvider, object>> _services;
         // Инициализация провайдера с зарегистрированными сервисами
-        // <param name="services">Словарь типов и их фабрик</param>
+        // "services">Словарь типов и их фабрик
         public SimpleServiceProvider(System.Collections.Generic.Dictionary<Type, Func<IServiceProvider, object>> services)
         {
             _services = services;
         }
         // Получить сервис по типу, используя зарегистрированную фабрику
-        // <param name="serviceType">Тип запрашиваемого сервиса</param>
-        // <returns>Экземпляр сервиса или null</returns>
+        // "serviceType">Тип запрашиваемого сервиса
+        // Экземпляр сервиса или null
         public object GetService(Type serviceType)
         {
             if (_services.TryGetValue(serviceType, out var factory))
