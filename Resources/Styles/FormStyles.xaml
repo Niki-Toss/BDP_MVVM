@@ -1,0 +1,76 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<!-- Общие стили для страниц справочников (Contests, Tags, Platforms, Users). Локальные стили остаются в View только если они уникальны для этой страницы -->
+	<!-- Кнопки действий -->
+	<!-- Кнопки действий (добавить, редактировать, удалить, сохранить) -->
+	<Style x:Key="ActionButton" TargetType="Button">
+		<Setter Property="Foreground" Value="White"/>
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="Padding" Value="14,8"/>
+		<Setter Property="FontWeight" Value="SemiBold"/>
+		<Setter Property="FontSize" Value="13"/>
+		<Setter Property="Cursor" Value="Hand"/>
+		<Setter Property="Margin" Value="0,0,8,0"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Border Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+						<ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<!-- Формы -->
+	<!-- Подписи к полям формы -->
+	<Style x:Key="FormLabel" TargetType="TextBlock">
+		<Setter Property="FontSize" Value="12"/>
+		<Setter Property="FontWeight" Value="SemiBold"/>
+		<Setter Property="Foreground" Value="#555555"/>
+		<Setter Property="Margin" Value="0,0,0,5"/>
+	</Style>
+	<!-- Поля ввода в формах -->
+	<Style x:Key="FormTextBox" TargetType="TextBox">
+		<Setter Property="FontSize" Value="13"/>
+		<Setter Property="Padding" Value="10,0"/>
+		<Setter Property="Height" Value="36"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="Background" Value="White"/>
+		<Setter Property="Foreground" Value="#212121"/>
+		<Setter Property="BorderBrush" Value="#E0E0E0"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Margin" Value="0,0,0,12"/>
+	</Style>
+	<!-- Списки -->
+	<!-- Стиль элемента списка с подсветкой при выборе (используется в справочниках) -->
+	<Style x:Key="SelectableListItemStyle" TargetType="ListViewItem">
+		<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+		<Setter Property="Padding" Value="0"/>
+		<Setter Property="Margin" Value="0,0,0,4"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="ListViewItem">
+					<Border x:Name="bg" Background="Transparent"
+                            CornerRadius="6" Padding="12,10">
+						<ContentPresenter/>
+					</Border>
+					<ControlTemplate.Triggers>
+						<!-- Выбранный элемент - зелёная подсветка -->
+						<Trigger Property="IsSelected" Value="True">
+							<Setter TargetName="bg" Property="Background" Value="#E8F5E9"/>
+							<Setter TargetName="bg" Property="BorderBrush" Value="#4CAF50"/>
+							<Setter TargetName="bg" Property="BorderThickness" Value="1"/>
+						</Trigger>
+						<!-- Наведение мыши -->
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter TargetName="bg" Property="Background" Value="#F5F5F5"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+</ResourceDictionary>

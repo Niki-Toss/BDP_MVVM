@@ -1,0 +1,161 @@
+﻿<Window x:Class="BDP_MVVM.Views.TaskViewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:BDP_MVVM.Views.Converters"
+        Title="Просмотр задачи"
+        Width="650" Height="650"
+        MinWidth="600" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+    <Window.Resources>
+        <!-- Конвертеры -->
+        <converters:DifficultyToColorConverter x:Key="DifficultyToColor"/>
+        <converters:StringToVisibilityConverter x:Key="StringToVis"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!-- ========== Шапка окна ========== -->
+        <Border Grid.Row="0" Background="#1976D2">
+            <StackPanel Orientation="Horizontal" Margin="20,0">
+                <TextBlock Text="👁️" FontSize="24" Foreground="White"
+                           VerticalAlignment="Center" Margin="0,0,12,0"/>
+                <TextBlock Text="Просмотр задачи"
+                           FontSize="18" FontWeight="Bold"
+                           Foreground="White" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+        <!-- ========== Контент с прокруткой ========== -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Border Background="White" Margin="20" CornerRadius="8" Padding="24">
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000" Opacity="0.08" BlurRadius="10" ShadowDepth="2"/>
+                </Border.Effect>
+                <StackPanel>
+                    <!-- ID задачи и дата создания -->
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="#E3F2FD" CornerRadius="6" Padding="10,4">
+                            <TextBlock FontSize="13" FontWeight="Bold" Foreground="#1565C0">
+                                <Run Text="#"/>
+                                <Run Text="{Binding Task_ID, Mode=OneWay}"/>
+                            </TextBlock>
+                        </Border>
+                        <TextBlock Grid.Column="2" 
+                                   Text="{Binding ДатаСозданияФорматированная, FallbackValue='—'}"
+                                   FontSize="12" Foreground="#9E9E9E"
+                                   VerticalAlignment="Center"/>
+                    </Grid>
+                    <!-- Название задачи -->
+                    <TextBlock Text="Название" FontSize="12" FontWeight="SemiBold"
+                               Foreground="#555555" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding Название, FallbackValue='Без названия'}"
+                               FontSize="16" FontWeight="Bold" Foreground="#212121"
+                               TextWrapping="Wrap" Margin="0,0,0,16"/>
+                    <!-- Сложность с цветным бейджем -->
+                    <TextBlock Text="Сложность" FontSize="12" FontWeight="SemiBold"
+                               Foreground="#555555" Margin="0,0,0,5"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <Border CornerRadius="6" Padding="12,6" Margin="0,0,10,0"
+                                Background="{Binding Сложность, Converter={StaticResource DifficultyToColor}}">
+                            <TextBlock Text="{Binding Сложность}" FontSize="14"
+                                       FontWeight="Bold" Foreground="White"/>
+                        </Border>
+                        <TextBlock Text="{Binding СложностьТекст, FallbackValue='—'}"
+                                   FontSize="14" Foreground="#666666"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <!-- Автор задачи -->
+                    <TextBlock Text="Автор" FontSize="12" FontWeight="SemiBold"
+                               Foreground="#555555" Margin="0,0,0,5"/>
+                    <TextBlock FontSize="13" Foreground="#212121" Margin="0,0,0,16">
+                        <Run Text="👤 "/>
+                        <Run Text="{Binding Автор.Логин, Mode=OneWay, FallbackValue='Неизвестен', TargetNullValue='Неизвестен'}"/>
+                    </TextBlock>
+                    <!-- Краткое условие -->
+                    <TextBlock Text="Краткое условие" FontSize="12" FontWeight="SemiBold"
+                               Foreground="#555555" Margin="0,0,0,5"/>
+                    <Border Background="#F5F5F5" CornerRadius="6" Padding="12" Margin="0,0,0,16">
+                        <TextBlock Text="{Binding Краткое_условие, FallbackValue='—', TargetNullValue='—'}"
+                                   FontSize="13" Foreground="#212121"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+                    <!-- Идея решения -->
+                    <TextBlock Text="Идея решения" FontSize="12" FontWeight="SemiBold"
+                               Foreground="#555555" Margin="0,0,0,5"/>
+                    <Border Background="#F5F5F5" CornerRadius="6" Padding="12" Margin="0,0,0,16">
+                        <TextBlock Text="{Binding Идея_решения, FallbackValue='—', TargetNullValue='—'}"
+                                   FontSize="13" Foreground="#212121"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+                    <!-- Ссылка на Polygon (кликабельная если есть) -->
+                    <TextBlock Text="Ссылка на Polygon" FontSize="12" FontWeight="SemiBold"
+                               Foreground="#555555" Margin="0,0,0,5"/>
+                    <!-- Если ссылка есть - показываем hyperlink -->
+                    <Border Background="#F5F5F5" CornerRadius="6" Padding="12" Margin="0,0,0,16"
+                            Visibility="{Binding Ссылка_polygon, Converter={StaticResource StringToVis}}">
+                        <TextBlock FontSize="13">
+                            <Hyperlink NavigateUri="{Binding Ссылка_polygon, FallbackValue='about:blank'}" 
+                                       RequestNavigate="Hyperlink_RequestNavigate">
+                                <Run Text="{Binding Ссылка_polygon, Mode=OneWay}"/>
+                            </Hyperlink>
+                        </TextBlock>
+                    </Border>
+                    <!-- Если ссылки нет - показываем прочерк -->
+                    <Border Background="#F5F5F5" CornerRadius="6" Padding="12" Margin="0,0,0,16">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Ссылка_polygon}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Ссылка_polygon}" Value="{x:Null}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <TextBlock Text="—" FontSize="13" Foreground="#9E9E9E"/>
+                    </Border>
+                    <!-- Примечание (жёлтый фон для выделения) -->
+                    <TextBlock Text="Примечание" FontSize="12" FontWeight="SemiBold"
+                               Foreground="#555555" Margin="0,0,0,5"/>
+                    <Border Background="#FFF8E1" CornerRadius="6" Padding="12">
+                        <TextBlock Text="{Binding Примечание, FallbackValue='—', TargetNullValue='—'}"
+                                   FontSize="13" Foreground="#555555"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+        <!-- ========== Кнопка закрытия ========== -->
+        <Border Grid.Row="2" Background="White" Padding="20,12">
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" Opacity="0.08" BlurRadius="10" ShadowDepth="-2"/>
+            </Border.Effect>
+            <Button Content="✖ Закрыть" Click="CloseButton_Click"
+                    Background="#9E9E9E" Foreground="White"
+                    Width="120" HorizontalAlignment="Right"
+                    BorderThickness="0" Padding="14,8"
+                    FontWeight="SemiBold" FontSize="13"
+                    Cursor="Hand">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Border>
+    </Grid>
+</Window>

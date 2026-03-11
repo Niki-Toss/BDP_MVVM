@@ -1,0 +1,208 @@
+﻿<Window x:Class="BDP_MVVM.Views.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:BDP_MVVM.Views.Converters"
+        Title="Вход в систему - Банк задач по программированию" 
+        Height="650" 
+        Width="500"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize"
+        Background="#F5F5F5">
+    <Window.Resources>
+        <!-- Конвертеры для видимости элементов -->
+        <converters:BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVis"/>
+        <!-- Упрощённые стили для окна входа (без сложных эффектов фокуса) -->
+        <Style x:Key="SimpleTextBox" TargetType="TextBox">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style x:Key="SimplePasswordBox" TargetType="PasswordBox">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- ========== Шапка с логотипом и названием ========== -->
+        <Border Grid.Row="0" Background="#2196F3">
+            <StackPanel Orientation="Horizontal" 
+                        VerticalAlignment="Center" 
+                        HorizontalAlignment="Center">
+                <TextBlock Text="📚" 
+                           FontSize="42" 
+                           VerticalAlignment="Center"
+                           Margin="0,0,16,0"/>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="БАНК ЗАДАЧ" 
+                               Foreground="White" 
+                               FontSize="24" 
+                               FontWeight="Bold"/>
+                    <TextBlock Text="по программированию" 
+                               Foreground="White" 
+                               FontSize="13" 
+                               Opacity="0.9"
+                               Margin="0,2,0,0"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+        <!-- ========== Форма входа ========== -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <Border Background="White" 
+                    Margin="40,30,40,30"
+                    Padding="30"
+                    CornerRadius="8"
+                    MaxWidth="380"
+                    VerticalAlignment="Top">
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000" 
+                                    Opacity="0.15" 
+                                    BlurRadius="12" 
+                                    ShadowDepth="3" 
+                                    Direction="270"/>
+                </Border.Effect>
+                <StackPanel>
+                    <!-- Заголовок формы -->
+                    <TextBlock Text="Вход в систему" 
+                               FontSize="24" 
+                               FontWeight="Bold" 
+                               Margin="0,0,0,30"
+                               Foreground="#212121"
+                               HorizontalAlignment="Center"/>
+                    <!-- Поле логина -->
+                    <TextBlock Text="Логин" 
+                               FontWeight="SemiBold"
+                               FontSize="14"
+                               Foreground="#666666"
+                               Margin="0,0,0,8"/>
+                    <TextBox x:Name="txtLogin"
+                             Style="{StaticResource SimpleTextBox}"
+                             Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"
+                             TabIndex="0"/>
+                    <!-- Поле пароля (биндинг через code-behind т.к. PasswordBox не поддерживает биндинг) -->
+                    <TextBlock Text="Пароль" 
+                               FontWeight="SemiBold"
+                               FontSize="14"
+                               Foreground="#666666"
+                               Margin="0,20,0,8"/>
+                    <PasswordBox x:Name="txtPassword"
+                                 Style="{StaticResource SimplePasswordBox}"
+                                 TabIndex="1"
+                                 PasswordChanged="PasswordBox_PasswordChanged"/>
+                    <!-- Сообщение об ошибке (показывается при неверном логине/пароле) -->
+                    <Border Background="#FFEBEE" 
+                            BorderBrush="#F44336" 
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            Padding="12"
+                            Margin="0,20,0,0"
+                            Visibility="{Binding HasError, Converter={StaticResource BoolToVis}}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="⚠️" 
+                                       FontSize="16" 
+                                       Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding ErrorMessage}" 
+                                       Foreground="#F44336"
+                                       FontWeight="SemiBold"
+                                       TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                    <!-- Индикатор загрузки (показывается во время проверки данных) -->
+                    <ProgressBar Height="4" 
+                                 IsIndeterminate="True"
+                                 Margin="0,20,0,0"
+                                 Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"/>
+                    <!-- Кнопки входа (скрываются во время загрузки) -->
+                    <StackPanel Margin="0,30,0,0" 
+                                Visibility="{Binding IsLoading, Converter={StaticResource InverseBoolToVis}}">
+                        <!-- Кнопка входа с логином и паролем -->
+                        <Button Content="ВОЙТИ" 
+                                Command="{Binding LoginCommand}"
+                                Height="44"
+                                FontSize="15"
+                                FontWeight="Bold"
+                                Background="#2196F3"
+                                Foreground="White"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                TabIndex="2">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        CornerRadius="4"
+                                                        Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" 
+                                                                    VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#1976D2"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <!-- Кнопка входа без авторизации (требование из задания) -->
+                        <Button Content="ПРОДОЛЖИТЬ КАК ГОСТЬ" 
+                                Command="{Binding LoginAsGuestCommand}"
+                                Height="44"
+                                FontSize="14"
+                                FontWeight="SemiBold"
+                                Background="White"
+                                Foreground="#2196F3"
+                                BorderBrush="#2196F3"
+                                BorderThickness="1"
+                                Margin="0,12,0,0"
+                                Cursor="Hand"
+                                TabIndex="3">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="4"
+                                                        Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" 
+                                                                    VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#E3F2FD"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+    </Grid>
+</Window>
